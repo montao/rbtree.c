@@ -123,7 +123,7 @@ void insert_repair_tree(struct node *n) {
         insert_case1(n);
     } else if (parent(n)->color == BLACK) {
         insert_case2(n);
-    } else if (uncle(n)->color == RED) {
+    } else if (uncle(n) != NULL && uncle(n)->color == RED) {
         insert_case3(n);
     } else {
         insert_case4(n);
@@ -150,7 +150,7 @@ void insert_case4(struct node *n) {
     struct node *p = parent(n);
     struct node *g = grandparent(n);
 
-    if (n == g->left->right) {
+    if (g->left != NULL && n == g->left->right) {
         rotate_left(p);
         n = n->left;
     } else if (n == g->right->left) {
