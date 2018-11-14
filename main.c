@@ -11,7 +11,6 @@ struct node {
     struct node *left, *right, *parent;
 };
 
-
 struct node *parent(struct node *n) {
     return n->parent; // NULL for root node
 }
@@ -282,20 +281,17 @@ void delete_case6(struct node *n) {
     }
 }
 
-int search(struct node *temp, int val) {
-    //struct node *temp = root;
+struct node* search(struct node *temp, int val) {
     int diff;
-
     while (temp != NULL) {
         diff = val - temp->key;
-
         if (diff > 0) {
             temp = temp->right;
         } else if (diff < 0) {
             temp = temp->left;
         } else {
             printf("Search Element Found!!\n");
-            return 1;
+            return temp;
         }
     }
     printf("Given Data Not Found in the tree!!\n");
@@ -303,21 +299,17 @@ int search(struct node *temp, int val) {
 }
 
 int main() {
-    printf("Hello, World!\n");
+    printf("Hello!\n");
     struct node *root = NULL;
     int choice, val, data, var, fl = 0;
-
     while (1) {
         setbuf(stdout, 0); // Bugfix for debugging mode on Windows
         printf("\nEnter your choice :1:Add  2:Delete  3:Find  4:Traverse 5: Test  6:Exit\n");
-
         scanf("%d", &choice);
-
         switch (choice) {
             case 1:
                 setbuf(stdout, 0);
                 printf("Enter the integer you want to add : ");
-
                 scanf("%d", &val);
                 struct node *z = (struct node *) malloc(sizeof(struct node));
                 z->key = val;
@@ -326,41 +318,29 @@ int main() {
                 z->color = 'r';
                 root = insert(root, z);
                 break;
-
             case 2:
                 printf("Enter the integer you want to delete : ");
-
                 scanf("%d", &var);
-
-                delete_case1(var);
+                delete_case1(search(root, var));
                 break;
-
             case 3:
                 printf("Enter search element \n");
                 scanf("%d", &val);
                 search(root, val);
                 break;
-
             case 4:
                 //traversal(root);
                 break;
-
             case 5:
                 //test();
                 break;
-
             case 6:
                 fl = 1;
                 break;
-
             default:
                 printf("\nInvalid Choice\n");
-
         }
-
         if (fl == 1) { break; }
-
     }
     return 0;
-
 }
