@@ -282,6 +282,26 @@ void delete_case6(struct node *n) {
     }
 }
 
+int search(struct node *temp, int val) {
+    //struct node *temp = root;
+    int diff;
+
+    while (temp != NULL) {
+        diff = val - temp->key;
+
+        if (diff > 0) {
+            temp = temp->right;
+        } else if (diff < 0) {
+            temp = temp->left;
+        } else {
+            printf("Search Element Found!!\n");
+            return 1;
+        }
+    }
+    printf("Given Data Not Found in the tree!!\n");
+    return 0;
+}
+
 int main() {
     printf("Hello, World!\n");
     struct node *root = NULL;
@@ -312,13 +332,13 @@ int main() {
 
                 scanf("%d", &var);
 
-                //delete(var);
+                delete_case1(var);
                 break;
 
             case 3:
                 printf("Enter search element \n");
                 scanf("%d", &val);
-                //search(val);
+                search(root, val);
                 break;
 
             case 4:
