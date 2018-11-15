@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+
 static char BLACK = 'b';
 static char RED = 'r';
 
@@ -10,6 +11,7 @@ struct node {
     char color;
     struct node *left, *right, *parent;
 };
+void insert_repair_tree(struct node* n);
 
 struct node *LEAF;
 
@@ -82,20 +84,6 @@ void rotate_right(struct node *n) {
     nnew->parent = p;
 }
 
-struct node *insert(struct node* root, struct node* n) {
-    // insert new node into the current tree
-    insert_recurse(root, n);
-
-    // repair the tree in case any of the red-black properties have been violated
-    insert_repair_tree(n);
-
-    // find the new root to return
-    root = n;
-    while (parent(root) != NULL)
-        root = parent(root);
-    return root;
-}
-
 void insert_recurse(struct node* root, struct node* n) {
     // recursively descend the tree until a leaf is found
     if (root != NULL && n->key < root->key) {
@@ -121,17 +109,6 @@ void insert_recurse(struct node* root, struct node* n) {
     n->color = RED;
 }
 
-void insert_repair_tree(struct node* n) {
-    if (parent(n) == NULL) {
-        insert_case1(n);
-    } else if (parent(n)->color == BLACK) {
-        insert_case2(n);
-    } else if (uncle(n)->color == RED) {
-        insert_case3(n);
-    } else {
-        insert_case4(n);
-    }
-}
 
 void insert_case1(struct node* n)
 {
@@ -150,6 +127,20 @@ void insert_case3(struct node* n)
     grandparent(n)->color = RED;
     insert_repair_tree(grandparent(n));
 }
+void insert_case4step2(struct node* n)
+{
+    struct node* p = parent(n);
+    struct node* g = grandparent(n);
+
+    if (n == p->left)
+        rotate_right(g);
+    else
+        rotate_left(g);
+    p->color = BLACK;
+    g->color = RED;
+}
+
+
 void insert_case4(struct node* n)
 {
     struct node* p = parent(n);
@@ -166,18 +157,34 @@ void insert_case4(struct node* n)
     insert_case4step2(n);
 }
 
-void insert_case4step2(struct node* n)
-{
-    struct node* p = parent(n);
-    struct node* g = grandparent(n);
 
-    if (n == p->left)
-        rotate_right(g);
-    else
-        rotate_left(g);
-    p->color = BLACK;
-    g->color = RED;
+
+void insert_repair_tree(struct node* n) {
+    if (parent(n) == NULL) {
+        insert_case1(n);
+    } else if (parent(n)->color == BLACK) {
+        insert_case2(n);
+    } else if (uncle(n)->color == RED) {
+        insert_case3(n);
+    } else {
+        insert_case4(n);
+    }
 }
+struct node *insert(struct node* root, struct node* n) {
+    // insert new node into the current tree
+    insert_recurse(root, n);
+
+    // repair the tree in case any of the red-black properties have been violated
+    insert_repair_tree(n);
+
+    // find the new root to return
+    root = n;
+    while (parent(root) != NULL)
+        root = parent(root);
+    return root;
+}
+
+
 
 void replace_node(struct node* n, struct node* child){
     child->parent = n->parent;
@@ -259,6 +266,22 @@ void delete_case4(struct node* n)
         delete_case5(n);
 }
 
+void delete_case6(struct node* n)
+{
+    struct node* s = sibling(n);
+
+    s->color = n->parent->color;
+    n->parent->color = BLACK;
+
+    if (n == n->parent->left) {
+        s->right->color = BLACK;
+        rotate_left(n->parent);
+    } else {
+        s->left->color = BLACK;
+        rotate_right(n->parent);
+    }
+}
+
 void delete_case5(struct node* n)
 {
     struct node* s = sibling(n);
@@ -283,22 +306,6 @@ the sibling's child can't be red, since no red parent can have a red child). */
         }
     }
     delete_case6(n);
-}
-
-void delete_case6(struct node* n)
-{
-    struct node* s = sibling(n);
-
-    s->color = n->parent->color;
-    n->parent->color = BLACK;
-
-    if (n == n->parent->left) {
-        s->right->color = BLACK;
-        rotate_left(n->parent);
-    } else {
-        s->left->color = BLACK;
-        rotate_right(n->parent);
-    }
 }
 
 struct node* search(struct node *temp, int val) {
