@@ -399,7 +399,7 @@ int main() {
                 scanf("%d", &val);
                 search(root, val);
                 break;
-            case 4: // TODO
+            case 4:
                 traversal(root);
                 break;
             case 5: // TODO
