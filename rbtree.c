@@ -11,8 +11,13 @@ struct node {
     char color;
     struct node *left, *right, *parent;
 };
-void insert_repair_tree(struct node* n);
 
+void insert_repair_tree(struct node* n);
+void delete_case1(struct node* n);
+void delete_case2(struct node* n);
+void delete_case3(struct node* n);
+void delete_case4(struct node* n);
+void delete_case5(struct node* n);
 struct node *LEAF;
 
 struct node *parent(struct node *n) {
@@ -324,7 +329,38 @@ struct node* search(struct node *temp, int val) {
     printf("Given Data Not Found in the tree!!\n");
     return 0;
 }
+void inorderTree(struct node *root) {
+    struct node *temp = root;
 
+    if (temp != NULL) {
+        inorderTree(temp->left);
+
+        printf(" %d--%c ", temp->key, temp->color);
+
+        inorderTree(temp->right);
+
+    }
+}
+
+void postorderTree(struct node *root) {
+    struct node *temp = root;
+
+    if (temp != NULL) {
+        postorderTree(temp->left);
+        postorderTree(temp->right);
+        printf(" %d--%c ", temp->key, temp->color);
+    }
+}
+
+void traversal(struct node *root) {
+    if (root != NULL) {
+        printf("root is %d-- %c", root->key, root->color);
+        printf("\nInorder tree traversal\n");
+        inorderTree(root);
+        printf("\npostorder tree traversal\n");
+        postorderTree(root);
+    }
+}
 int main() {
     printf("Hello!\n");
     struct node *root = NULL;//malloc(sizeof(struct node));
@@ -332,6 +368,7 @@ int main() {
     LEAF->color=BLACK;
     LEAF->left=NULL;
     LEAF->right=NULL;
+    LEAF->key=0;
     int choice, val, var, fl = 0;
     while (1) {
         setbuf(stdout, 0); // Bugfix for debugging mode on Windows
@@ -363,7 +400,7 @@ int main() {
                 search(root, val);
                 break;
             case 4: // TODO
-                //traversal(root);
+                traversal(root);
                 break;
             case 5: // TODO
                 //test();
