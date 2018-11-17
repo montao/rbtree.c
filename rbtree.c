@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
 static char BLACK = 'b';
 static char RED = 'r';
 
