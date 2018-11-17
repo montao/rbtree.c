@@ -358,7 +358,7 @@ void traversal(struct node *root) {
 
 int main() {
     clock_t start = clock(), diff;
-    int T = 10000000; //test case 10000 nodes
+    int T = 10000; //test case 10000 nodes
     int r2;
     struct node *root = NULL;
     srand(time(NULL));
@@ -368,9 +368,21 @@ int main() {
     LEAF->left = NULL;
     LEAF->right = NULL;
     LEAF->key = 0;
+    z = malloc(sizeof(struct node));
+    z->key = 99999;
+    z->left = NULL;
+    z->right = NULL;
+    z->parent = NULL;
+    z->color = RED;
+    root = insert(root, z);
+
+
     while (T-- > 0) {
         r2 = (2 + T) * (rand() % 100); // data
         z = malloc(sizeof(struct node));
+
+
+
         if (z != NULL) {
             z->key = r2;
             z->left = NULL;
@@ -380,12 +392,7 @@ int main() {
             root = insert(root, z);
         } else printf("malloc failed at node number %d", T);
 
-        z->key = 999999;
-        z->left = NULL;
-        z->right = NULL;
-        z->parent = NULL;
-        z->color = RED;
-        root = insert(root, z);
+
 
     }
     diff = clock() - start;
@@ -393,7 +400,7 @@ int main() {
     int msec = diff * 1000 / CLOCKS_PER_SEC;
     printf("Time taken %d seconds %d milliseconds", msec/1000, msec%1000);
     clock_t start2 = clock(), diff2;
-    search(root, 999999);
+    search(root, 99999);
     diff2 = clock() - start2;
     int msec2 = diff2 * 1000 / CLOCKS_PER_SEC;
     printf("Lookup taken %d seconds %d milliseconds", msec2/1000, msec2%1000);
