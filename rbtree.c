@@ -358,7 +358,7 @@ void traversal(struct node *root) {
 }
 
 int main() {
-    int T = 1000000000; //test case 1000000000 nodes
+    int T = 10000; //test case 10000 nodes
     int r2;
     struct node *root = NULL;
     srand(time(NULL));
@@ -368,27 +368,23 @@ int main() {
     LEAF->left = NULL;
     LEAF->right = NULL;
     LEAF->key = 0;
- //printf("starting loop!\n");
     while (T-- > 0) {
         r2 = (2 + T) * (rand() % 100); // data
         z = malloc(sizeof(struct node));
- //printf(" loop!\n");
         if (z != NULL) {
-//printf(" test!\n");
             z->key = r2;
             z->left = NULL;
             z->right = NULL;
             z->parent = NULL;
             z->color = RED;
-//printf(" test2!\n");
             root = insert(root, z);
-//printf(" test3!\n");
         } else printf("malloc failed at node number %d", T);
     }
     root = NULL;
     return 0;
 }
 
+// Change this to "main()" to run the program interactively
 int test() {
     printf("Hello!\n");
     struct node *root = NULL;//malloc(sizeof(struct node));
