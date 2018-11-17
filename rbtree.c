@@ -404,6 +404,7 @@ int main() {
     diff2 = clock() - start2;
     int msec2 = diff2 * 1000 / CLOCKS_PER_SEC;
     printf("Lookup taken %d seconds %d milliseconds", msec2/1000, msec2%1000);
+    delete_one_child(search(root, 99999));
     root = NULL;
     return 0;
 }
