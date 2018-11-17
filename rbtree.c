@@ -375,14 +375,9 @@ int main() {
     z->parent = NULL;
     z->color = RED;
     root = insert(root, z);
-
-
     while (T-- > 0) {
         r2 = (2 + T) * (rand() % 100); // data
         z = malloc(sizeof(struct node));
-
-
-
         if (z != NULL) {
             z->key = r2;
             z->left = NULL;
@@ -391,19 +386,15 @@ int main() {
             z->color = RED;
             root = insert(root, z);
         } else printf("malloc failed at node number %d", T);
-
-
-
     }
     diff = clock() - start;
-
     int msec = diff * 1000 / CLOCKS_PER_SEC;
-    printf("Time taken %d seconds %d milliseconds", msec/1000, msec%1000);
+    printf("\nTime has taken %d seconds %d milliseconds\n", msec / 1000, msec % 1000);
     clock_t start2 = clock(), diff2;
     search(root, 99999);
     diff2 = clock() - start2;
     int msec2 = diff2 * 1000 / CLOCKS_PER_SEC;
-    printf("Lookup taken %d seconds %d milliseconds", msec2/1000, msec2%1000);
+    printf("Lookup taken %d seconds %d milliseconds", msec2 / 1000, msec2 % 1000);
     delete_one_child(search(root, 99999));
     root = NULL;
     return 0;
