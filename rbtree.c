@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 static char BLACK = 'b';
@@ -12,12 +13,18 @@ struct node {
     struct node *left, *right, *parent;
 };
 
-void insert_repair_tree(struct node* n);
-void delete_case1(struct node* n);
-void delete_case2(struct node* n);
-void delete_case3(struct node* n);
-void delete_case4(struct node* n);
-void delete_case5(struct node* n);
+void insert_repair_tree(struct node *n);
+
+void delete_case1(struct node *n);
+
+void delete_case2(struct node *n);
+
+void delete_case3(struct node *n);
+
+void delete_case4(struct node *n);
+
+void delete_case5(struct node *n);
+
 struct node *LEAF;
 
 struct node *parent(struct node *n) {
@@ -89,21 +96,19 @@ void rotate_right(struct node *n) {
     nnew->parent = p;
 }
 
-void insert_recurse(struct node* root, struct node* n) {
+void insert_recurse(struct node *root, struct node *n) {
     // recursively descend the tree until a leaf is found
     if (root != NULL && n->key < root->key) {
         if (root->left != LEAF) {
             insert_recurse(root->left, n);
             return;
-        }
-        else
+        } else
             root->left = n;
     } else if (root != NULL) {
-        if (root->right != LEAF){
+        if (root->right != LEAF) {
             insert_recurse(root->right, n);
             return;
-        }
-        else
+        } else
             root->right = n;
     }
 
@@ -115,27 +120,25 @@ void insert_recurse(struct node* root, struct node* n) {
 }
 
 
-void insert_case1(struct node* n)
-{
+void insert_case1(struct node *n) {
     if (parent(n) == NULL)
         n->color = BLACK;
 }
 
-void insert_case2(struct node* n)
-{
+void insert_case2(struct node *n) {
     return; /* Do nothing since tree is still valid */
 }
-void insert_case3(struct node* n)
-{
+
+void insert_case3(struct node *n) {
     parent(n)->color = BLACK;
     uncle(n)->color = BLACK;
     grandparent(n)->color = RED;
     insert_repair_tree(grandparent(n));
 }
-void insert_case4step2(struct node* n)
-{
-    struct node* p = parent(n);
-    struct node* g = grandparent(n);
+
+void insert_case4step2(struct node *n) {
+    struct node *p = parent(n);
+    struct node *g = grandparent(n);
 
     if (n == p->left)
         rotate_right(g);
@@ -146,10 +149,9 @@ void insert_case4step2(struct node* n)
 }
 
 
-void insert_case4(struct node* n)
-{
-    struct node* p = parent(n);
-    struct node* g = grandparent(n);
+void insert_case4(struct node *n) {
+    struct node *p = parent(n);
+    struct node *g = grandparent(n);
 
     if (n == g->left->right) {
         rotate_left(p);
@@ -163,8 +165,7 @@ void insert_case4(struct node* n)
 }
 
 
-
-void insert_repair_tree(struct node* n) {
+void insert_repair_tree(struct node *n) {
     if (parent(n) == NULL) {
         insert_case1(n);
     } else if (parent(n)->color == BLACK) {
@@ -175,7 +176,8 @@ void insert_repair_tree(struct node* n) {
         insert_case4(n);
     }
 }
-struct node *insert(struct node* root, struct node* n) {
+
+struct node *insert(struct node *root, struct node *n) {
     // insert new node into the current tree
     insert_recurse(root, n);
 
@@ -190,8 +192,7 @@ struct node *insert(struct node* root, struct node* n) {
 }
 
 
-
-void replace_node(struct node* n, struct node* child){
+void replace_node(struct node *n, struct node *child) {
     child->parent = n->parent;
     if (n == n->parent->left)
         n->parent->left = child;
@@ -199,18 +200,17 @@ void replace_node(struct node* n, struct node* child){
         n->parent->right = child;
 }
 
-int is_leaf(struct node* n){
-    if(n->right ==NULL && n->left == NULL)
+int is_leaf(struct node *n) {
+    if (n->right == NULL && n->left == NULL)
         return 1;
     else return 0;
 }
 
-void delete_one_child(struct node* n)
-{
+void delete_one_child(struct node *n) {
     /*
      * Precondition: n has at most one non-leaf child.
      */
-    struct node* child = is_leaf(n->right) ? n->left : n->right;
+    struct node *child = is_leaf(n->right) ? n->left : n->right;
 
     replace_node(n, child);
     if (n->color == BLACK) {
@@ -222,15 +222,13 @@ void delete_one_child(struct node* n)
     free(n);
 }
 
-void delete_case1(struct node* n)
-{
+void delete_case1(struct node *n) {
     if (n->parent != NULL)
         delete_case2(n);
 }
 
-void delete_case2(struct node* n)
-{
-    struct node* s = sibling(n);
+void delete_case2(struct node *n) {
+    struct node *s = sibling(n);
 
     if (s->color == RED) {
         n->parent->color = RED;
@@ -243,9 +241,8 @@ void delete_case2(struct node* n)
     delete_case3(n);
 }
 
-void delete_case3(struct node* n)
-{
-    struct node* s = sibling(n);
+void delete_case3(struct node *n) {
+    struct node *s = sibling(n);
 
     if ((n->parent->color == BLACK) &&
         (s->color == BLACK) &&
@@ -257,9 +254,8 @@ void delete_case3(struct node* n)
         delete_case4(n);
 }
 
-void delete_case4(struct node* n)
-{
-    struct node* s = sibling(n);
+void delete_case4(struct node *n) {
+    struct node *s = sibling(n);
 
     if ((n->parent->color == RED) &&
         (s->color == BLACK) &&
@@ -271,9 +267,8 @@ void delete_case4(struct node* n)
         delete_case5(n);
 }
 
-void delete_case6(struct node* n)
-{
-    struct node* s = sibling(n);
+void delete_case6(struct node *n) {
+    struct node *s = sibling(n);
 
     s->color = n->parent->color;
     n->parent->color = BLACK;
@@ -287,11 +282,10 @@ void delete_case6(struct node* n)
     }
 }
 
-void delete_case5(struct node* n)
-{
-    struct node* s = sibling(n);
+void delete_case5(struct node *n) {
+    struct node *s = sibling(n);
 
-    if  (s->color == BLACK) { /* this if statement is trivial,
+    if (s->color == BLACK) { /* this if statement is trivial,
 due to case 2 (even though case 2 changed the sibling to a sibling's child,
 the sibling's child can't be red, since no red parent can have a red child). */
 /* the following statements just force the red to be on the left of the left of the parent,
@@ -313,7 +307,7 @@ the sibling's child can't be red, since no red parent can have a red child). */
     delete_case6(n);
 }
 
-struct node* search(struct node *temp, int val) {
+struct node *search(struct node *temp, int val) {
     int diff;
     while (!is_leaf(temp)) {
         diff = val - temp->key;
@@ -329,6 +323,7 @@ struct node* search(struct node *temp, int val) {
     printf("Given Data Not Found in the tree!!\n");
     return 0;
 }
+
 void inorderTree(struct node *root) {
     struct node *temp = root;
 
@@ -361,14 +356,37 @@ void traversal(struct node *root) {
         postorderTree(root);
     }
 }
+
+int test() {
+    int T = 100000000; //test case 1000000000 nodes
+    int r2;
+    struct node *root = NULL;
+    srand(time(NULL));
+    struct node *z;
+    while (T-- > 0) {
+        r2 = (2 + T) * (rand() % 100); // data
+        z = malloc(sizeof(struct node));
+        if (z != NULL) {
+            z->key = r2;
+            z->left = NULL;
+            z->right = NULL;
+            z->parent = NULL;
+            z->color = RED;
+            root = insert(root, z);
+        } else printf("malloc failed at node number %d", T);
+    }
+    root = NULL;
+    return 0;
+}
+
 int main() {
     printf("Hello!\n");
     struct node *root = NULL;//malloc(sizeof(struct node));
     LEAF = malloc(sizeof(struct node));
-    LEAF->color=BLACK;
-    LEAF->left=NULL;
-    LEAF->right=NULL;
-    LEAF->key=0;
+    LEAF->color = BLACK;
+    LEAF->left = NULL;
+    LEAF->right = NULL;
+    LEAF->key = 0;
     int choice, val, var, fl = 0;
     while (1) {
         setbuf(stdout, 0); // Bugfix for debugging mode on Windows
@@ -403,7 +421,7 @@ int main() {
                 traversal(root);
                 break;
             case 5: // TODO
-                //test();
+                test();
                 break;
             case 6:
                 fl = 1;
