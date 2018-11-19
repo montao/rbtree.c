@@ -355,7 +355,24 @@ void traversal(struct node *root) {
         postorderTree(root);
     }
 }
-
+// Returns the number of black nodes in a subtree of the given node
+// or -1 if it is not a red black tree.
+int computeBlackHeight(struct node* currNode) {
+    // For an empty subtree the answer is obvious
+    if (currNode == NULL)
+        return 0;
+    // Computes the height for the left and right child recursively
+    int leftHeight = computeBlackHeight(currNode->left);
+    int rightHeight = computeBlackHeight(currNode->right);
+    int add = currNode->color == BLACK ? 1 : 0;
+    // The current subtree is not a red black tree if and only if
+    // one or more of current node's children is a root of an invalid tree
+    // or they contain different number of black nodes on a path to a null node.
+    if (leftHeight == -1 || rightHeight == -1 || leftHeight != rightHeight)
+        return -1;
+    else
+        return leftHeight + add;
+}
 int main() {
     clock_t start = clock(), diff;
     int T = 10000; //test case 10000 nodes
@@ -394,7 +411,8 @@ int main() {
     search(root, 99999);
     diff2 = clock() - start2;
     int msec2 = diff2 * 1000 / CLOCKS_PER_SEC;
-    printf("Lookup taken %d seconds %d milliseconds", msec2 / 1000, msec2 % 1000);
+    printf("Lookup taken %d seconds %d milliseconds\n", msec2 / 1000, msec2 % 1000);
+    printf("Black height is %d\n", computeBlackHeight(root));
     delete_one_child(search(root, 99999));
     root = NULL;
     return 0;
